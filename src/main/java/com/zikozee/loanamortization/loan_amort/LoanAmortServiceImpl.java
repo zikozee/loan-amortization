@@ -33,6 +33,7 @@ public class LoanAmortServiceImpl implements LoanAmortService{
         LoanAmortResDTO amortResDTO = LoanAmortResDTO.builder().paymentNo(1).paymentDate(loanAmortReqDTO.getStartDate())
                 .begBalance(loanAmortReqDTO.getLoanAmount())
                 .scheduledPmt(scheduledPayment)
+                .extraPmt(loanAmortReqDTO.getExtraPayment())
                 .totalPmt(totalPayment)
                 .interest(interest).principal(principal).endingBal(balance).build();
 
@@ -48,7 +49,7 @@ public class LoanAmortServiceImpl implements LoanAmortService{
             balance = LoanAmortizationUtil.balance(amortResDTO.getEndingBal(), principal);
             LocalDate  newDate= amortResDTO.getPaymentDate().plusMonths(1);
             amortResDTO = LoanAmortResDTO.builder().paymentNo(counter).paymentDate(newDate).begBalance(amortResDTO.getEndingBal())
-                    .scheduledPmt(scheduledPayment).totalPmt(totalPayment)
+                    .scheduledPmt(scheduledPayment).extraPmt(amortResDTO.getExtraPmt()).totalPmt(totalPayment)
                     .interest(interest).principal(principal).endingBal(balance).build();
 
             loanAmortResDTOList.add(amortResDTO);

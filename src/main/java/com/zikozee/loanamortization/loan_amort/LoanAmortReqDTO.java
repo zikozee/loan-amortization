@@ -18,6 +18,7 @@ public class LoanAmortReqDTO {
     private double loanAmount;
     @NotNull(message = "interest is required")
     private double interestRate;
+    private double extraPayment;
     @NotNull(message = "Loan Period is required")
     private int loanPeriodInYears;
     @NotNull(message = "Number of payment per year is required")

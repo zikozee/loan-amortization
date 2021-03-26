@@ -50,6 +50,13 @@ public class LoanAmortizationUtil {
         return roundOff(remainingLoanAmount - calculatedPrincipal);
     }
 
+    public static double totalPayments(double scheduledPayment, double extraPayments, double begBal){
+        double totalPayment = Math.min((scheduledPayment + extraPayments), begBal);
+
+        return roundOff(totalPayment);
+    }
+
+    //TODO DECIDE WHAT THIS WILL BE
     private static double roundOff(double input){
         return Math.round(input * 100.0) / 100.0;
     }

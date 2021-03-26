@@ -26,10 +26,10 @@ public class LoanAmortServiceImpl implements LoanAmortService{
                         numberOfTimes);
 
         double interest = interestPerPeriod(loanAmortReqDTO.getLoanAmount(), loanAmortReqDTO.getInterestRate());
-        double principal = calculatedPrincipal(scheduledPayment, interest);
+        double totalPayment =  totalPayments(scheduledPayment, loanAmortReqDTO.getExtraPayment(), loanAmortReqDTO.getLoanAmount());
+        double principal = calculatedPrincipal(totalPayment, interest);
         double balance = calculatedBalance(scheduledPayment, loanAmortReqDTO.getExtraPayment(), loanAmortReqDTO.getLoanAmount(), principal);
 
-        double totalPayment =  totalPayments(scheduledPayment, loanAmortReqDTO.getExtraPayment(), loanAmortReqDTO.getLoanAmount());
         double extraPayments = computeExtraPayment(scheduledPayment, loanAmortReqDTO.getExtraPayment(), loanAmortReqDTO.getLoanAmount());
 
         LoanAmortResDTO amortResDTO = LoanAmortResDTO.builder().paymentNo(1).paymentDate(loanAmortReqDTO.getStartDate())
@@ -37,23 +37,25 @@ public class LoanAmortServiceImpl implements LoanAmortService{
                 .scheduledPmt(scheduledPayment)
                 .extraPmt(extraPayments)
                 .totalPmt(totalPayment)
-                .interest(interest).principal(principal).endingBal(balance).build();
+                .interest(interest).principal(principal).endingBal(balance).cumulativeInt(interest).build();
 
         loanAmortResDTOList.add(amortResDTO);
 
         int counter  = 1;
+        double cumulativeInterest = interest;
         for (int i = 0; i < numberOfTimes - 1; i++) {
             counter++;
 
             interest = interestPerPeriod(amortResDTO.getEndingBal(), loanAmortReqDTO.getInterestRate());
-            principal = calculatedPrincipal(amortResDTO.getScheduledPmt(), interest);
+            cumulativeInterest = cumulativeInterest(cumulativeInterest, interest);
+            totalPayment = totalPayments(amortResDTO.getScheduledPmt(), loanAmortReqDTO.getExtraPayment(), amortResDTO.getBegBalance());
+            principal = calculatedPrincipal(totalPayment, interest);
             balance = calculatedBalance(amortResDTO.getScheduledPmt(), amortResDTO.getExtraPmt(), amortResDTO.getEndingBal(), principal);
             LocalDate  newDate= amortResDTO.getPaymentDate().plusMonths(1);
-            totalPayment = totalPayments(amortResDTO.getScheduledPmt(), loanAmortReqDTO.getExtraPayment(), amortResDTO.getBegBalance());
             extraPayments = computeExtraPayment(amortResDTO.getScheduledPmt(), loanAmortReqDTO.getExtraPayment(), amortResDTO.getBegBalance());
             amortResDTO = LoanAmortResDTO.builder().paymentNo(counter).paymentDate(newDate).begBalance(amortResDTO.getEndingBal())
                     .scheduledPmt(scheduledPayment).extraPmt(extraPayments).totalPmt(totalPayment)
-                    .interest(interest).principal(principal).endingBal(balance).build();
+                    .interest(interest).principal(principal).endingBal(balance).cumulativeInt(cumulativeInterest).build();
 
             loanAmortResDTOList.add(amortResDTO);
         }

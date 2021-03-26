@@ -22,22 +22,26 @@ public class LoanAmortizationUtil {
 
     /**
      *
-     * @param principal principal remaining
+     * @param beginningBal beginning bal
      * @param interest period interest rate expressed as a decimal
      * @return Monthly interest
      */
-    public static double interestPerPeriod(double principal, double interest){
-        return roundOff(principal * (interest)/NUMBER_OF_MONTHS/PERCENTAGE);
+    public static double interestPerPeriod(double beginningBal, double interest){
+        return roundOff(beginningBal * (interest)/NUMBER_OF_MONTHS/PERCENTAGE);
+    }
+
+    public static double cumulativeInterest(double currentSummedInterest, double interest){
+        return roundOff(currentSummedInterest + interest);
     }
 
     /**
      *
-     * @param scheduledPayment  the calculated scheduled payment
+     * @param totalPayment  the calculated scheduled payment
      * @param monthlyInterest calculated monthly interest
      * @return principal
      */
-    public static double calculatedPrincipal(double scheduledPayment, double monthlyInterest){
-        return roundOff(scheduledPayment - monthlyInterest);
+    public static double calculatedPrincipal(double totalPayment, double monthlyInterest){
+        return roundOff(totalPayment - monthlyInterest);
     }
 
     /**

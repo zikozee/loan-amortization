@@ -42,18 +42,37 @@ public class LoanAmortizationUtil {
 
     /**
      *
-     * @param remainingLoanAmount amount left to pay
-     * @param calculatedPrincipal calculated principal
-     * @return remaining payable balance
+     * @param scheduledPayment
+     * @param extraPayment
+     * @param begBal
+     * @param principal
+     * @return
      */
-    public static double balance(double remainingLoanAmount, double calculatedPrincipal){
-        return roundOff(remainingLoanAmount - calculatedPrincipal);
+    public static double calculatedBalance(double scheduledPayment, double extraPayment, double begBal, double principal){
+        double calculatedBalance = scheduledPayment + extraPayment <= begBal
+                ? begBal-principal : 0;
+        return roundOff(calculatedBalance);
     }
 
+    /**
+     *
+     * @param scheduledPayment
+     * @param extraPayments
+     * @param begBal
+     * @return
+     */
     public static double totalPayments(double scheduledPayment, double extraPayments, double begBal){
         double totalPayment = Math.min((scheduledPayment + extraPayments), begBal);
 
         return roundOff(totalPayment);
+    }
+
+    public static double computeExtraPayment(double scheduledPayment, double extraPayments, double begBal){
+        double computedExtraPayment = (scheduledPayment + extraPayments) < begBal
+                ? extraPayments
+                : (begBal - scheduledPayment > 0) ? (begBal - scheduledPayment) : 0;
+
+        return roundOff(computedExtraPayment);
     }
 
     //TODO DECIDE WHAT THIS WILL BE

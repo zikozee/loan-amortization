@@ -27,16 +27,16 @@ public class SwaggerConfig {
 
     private ApiInfo metaData(){
         Contact contact = new Contact("Ezekiel Eromosei", "http://github.com/zikozee/loan-amortization",
-                "ezekiel.eromosei.com");
+                "ezekiel.eromosei@gmail.com");
 
         return new ApiInfo(
                 "My Swagger Rest Repository",
-                "Bank Web Account Opening Crm",
+                "Loan Amortization Calculator",
                 "1.0",
                 "Terms of Service: Licensed",
                 contact,
-                "Apache License Version 2.0",
-                "https://www.apache.org/licenses/LICENSE-2.0",
+                "Free",
+                "FREE",
                 new ArrayList<>());
     }
 
